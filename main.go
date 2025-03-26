@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"slices"
+)
 
 type TaskList struct {
 	Tasks []Task
@@ -12,54 +15,62 @@ type Task struct {
 	taskStatus bool
 }
 
+/*
+CreateTask
+
+	  		Fields created:
+				taskTitle: string
+				taskDesc: string
+				taskStatus: Open by default, not requested
+			For the moment, only one word per item
+*/
 func (l *TaskList) CreateTask(t Task) {
-	/*	InsertTask
-		  		Fields:
-					taskTitle: string
-					taskDesc: string
-					taskStatus: Open by default, not requested
-				For the moment, only one word per item
-	*/
+
 	l.Tasks = append(l.Tasks, t)
-	//{taskTitle, taskDesc, true}
+
 	fmt.Printf("Task created! \t Title: %s \t Description: %s \t Status: Open \n", t.taskTitle, t.taskDesc)
 
 }
 
+/*
+MarkDeletionTask
+
+	Task selected to be deleted.
+	List is debugged before marking task to delete
+*/
 func (l *TaskList) MarkDeletionTask(index int) {
+
+	l.DebugList()
 	l.Tasks[index-1].taskStatus = false
 	fmt.Printf("Item %d -> %s marked successfully!", index, l.Tasks[index-1].taskTitle)
 }
 
-func (l *TaskList) DebugList() {
+/*
+MarkDeletionTaskDebugList
 
-	//temporalList := make([]Task, len(l))
-	//temporalList := make([]TaskList, 5, 10)
-	//var destLower, destUpper, srcLower int
+	Item already selected to be deleted is removed from list
+*/
+func (l *TaskList) DebugList() {
 
 	for i, t := range l.Tasks {
 
 		fmt.Println(t)
 		if !(l.Tasks[i].taskStatus) {
-			//temporalList = append(temporalList, l.Tasks[i])
-			//l.Tasks = append(l.Tasks[0:1], l.Tasks[2:]...)
-			//l.Tasks = append(l.Tasks[destLower:destUpper],l.Tasks[srcLower:]...)
+			fmt.Println("Item deleted: ", i)
+			l.Tasks = slices.Delete(l.Tasks, i, i+1)
+			break
+
 		}
-		/*	destLower++
-			destUpper++
-			srcLower++
-		*/
+
+		fmt.Println("List debugging completed!")
 	}
-	//fmt.Printf("%d, %d, %d", destLower, destUpper, srcLower)
-
-	//copy(l.Tasks, temporalList)
-
-	//l.Tasks = append(l.Tasks[0:1], l.Tasks[2:]...)
-
-	fmt.Println("List debugging completed!")
 }
 
-//}
+/*
+ListTasks
+
+	List is displayed
+*/
 func (l *TaskList) ListTasks() {
 	for i, t := range l.Tasks {
 		fmt.Printf("%d %s %s %t \n", i+1, t.taskDesc, t.taskTitle, t.taskStatus)
